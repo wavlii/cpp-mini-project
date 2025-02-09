@@ -25,10 +25,36 @@ class LRUCache
         void removeNode(node* );
         void addTohead(node* );
     pubilc:
-        LRUCache(int capacity);
-        ~LRUCache();
-        V get(K key);
+        LRUCache(int cap):capacity(cap),size(0)
+        {
+            head = new node(K(),V());
+            tail = new node(K(),V());
+            head->next = tail;head->prev = nullptr;
+            tail->prev = head;tail->next = nullptr;
+        }
+        ~LRUCache()
+        {
+            node* curr = head;
+            while(curr)
+            {
+                node* temp = curr->next;
+                delete curr;
+                curr = temp;
+            }
+            delete head;
+            head = nullptr;
+        }
+        V get(K key)
+        {
+            //review if the cache has this 'key'
+            if(!cache.count(key)) return V();
+            node* Node = cache[key];
+            moveTohead(Node);
+            return Node->value;
+        }
         void put(K key,V value);
 };
+
+
 
 #endif
